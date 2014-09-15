@@ -16,15 +16,15 @@ clean:
 	docker rmi -f planitar/userdb || true
 
 test:
-	docker run --name userdb -d planitar/userdb
+	docker run --name test-userdb -d planitar/userdb
 	sleep 3s
-	addr=$$(docker inspect --format='{{ .NetworkSettings.IPAddress }}' userdb) && \
+	addr=$$(docker inspect --format='{{ .NetworkSettings.IPAddress }}' test-userdb) && \
 	  psql -d userdb -h $$addr -U user_api -l; ret=$$?; \
 	  if [ $$ret -ne 0 ]; then \
-		docker logs userdb; \
-		docker stop userdb; \
-		docker rm userdb; \
+		docker logs test-userdb; \
+		docker stop test-userdb; \
+		docker rm test-userdb; \
 		false; \
 	  fi
-	docker stop userdb
-	docker rm userdb
+	docker stop test-userdb
+	docker rm test-userdb
