@@ -19,7 +19,7 @@ test:
 	docker run --name test-userdb -d planitar/userdb
 	sleep 3s
 	addr=$$(docker inspect --format='{{ .NetworkSettings.IPAddress }}' test-userdb) && \
-	  psql -d userdb -h $$addr -U user_api -l; ret=$$?; \
+	  psql -d userdb -h $$addr -U user_api -f test.sql; ret=$$?; \
 	  if [ $$ret -ne 0 ]; then \
 		docker logs test-userdb; \
 		docker stop test-userdb; \
