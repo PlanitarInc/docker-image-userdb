@@ -1,4 +1,5 @@
 # XXX no versioning of the docker image
+IMAGE_NAME=planitar/userdb
 
 ifneq ($(NOCACHE),)
   NOCACHEFLAG=--no-cache
@@ -7,16 +8,16 @@ endif
 .PHONY: build push clean test
 
 build:
-	docker build ${NOCACHEFLAG} -t planitar/userdb .
+	docker build ${NOCACHEFLAG} -t ${IMAGE_NAME} .
 
 push:
-	docker push planitar/userdb
+	docker push ${IMAGE_NAME}
 
 clean:
-	docker rmi -f planitar/userdb || true
+	docker rmi -f ${IMAGE_NAME} || true
 
 test:
-	docker run --name test-userdb -d planitar/userdb
+	docker run --name test-userdb -d ${IMAGE_NAME}
 	sleep 3s
 	addr=$$(docker inspect --format='{{ .NetworkSettings.IPAddress }}' test-userdb) && \
 	  psql -d userdb -h $$addr -U user_api -f test.sql; ret=$$?; \
