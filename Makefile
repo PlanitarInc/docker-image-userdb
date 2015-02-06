@@ -20,7 +20,8 @@ test:
 	docker run --name test-userdb -d ${IMAGE_NAME}
 	sleep 3s
 	addr=$$(docker inspect --format='{{ .NetworkSettings.IPAddress }}' test-userdb) && \
-	  psql -d userdb -h $$addr -U user_api -f test.sql; ret=$$?; \
+	docker run --rm -v `pwd`:/in ${IMAGE_NAME} \
+	  psql -d userdb -h $$addr -U user_api -f /in/test.sql; ret=$$?; \
 	  if [ $$ret -ne 0 ]; then \
 		docker logs test-userdb; \
 		docker stop test-userdb; \
